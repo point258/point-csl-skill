@@ -11,6 +11,7 @@
 ```
 point老三样焚决/
 ├── 00-先看这里.md
+├── CHANGELOG.md                  升级记录
 ├── astrbot-qq-deploy/            部署
 │   ├── SKILL.md
 │   ├── references/
@@ -21,11 +22,13 @@ point老三样焚决/
 │   │   ├── 40-plugins.md         四个插件的作用、槽位、坑
 │   │   ├── 50-verify.md          验收清单
 │   │   ├── 60-troubleshooting.md 15 条症状 → 根因 → 修法
-│   │   └── 70-ops.md             备份、清理、改人格、升级
+│   │   ├── 70-ops.md             备份、清理、改人格、升级
+│   │   └── 80-injection-and-tuning.md  注入层排查与上下文预算
 │   ├── assets/docker-compose.yml.tpl
 │   └── scripts/
 │       ├── patch_plugins.py      一键打补丁（幂等，可 --check）
 │       ├── verify_deploy.py      一键验收
+│       ├── audit_all.py          35 项全量体检（含实际注入）
 │       └── ssh_helper.py         SSH 兜底（仅依赖 paramiko）
 └── laosan-persona-forge/         人格
     ├── SKILL.md
@@ -34,10 +37,24 @@ point老三样焚决/
     │   ├── anti-slop.md          AI 味词表与结构禁忌
     │   ├── persona-skeleton.md   15 段骨架逐段写法
     │   ├── plugin-bridge.md      插件注入格式与对接
-    │   └── sources.md            调研来源
+    │   ├── sources.md            调研来源
+    │   └── field-notes.md        现场笔记：人格失真的八个原因
     ├── assets/persona-template.md
     └── scripts/persona_lint.py   人格体检（无第三方依赖）
 ```
+
+---
+
+## 本次升级（2026-10-24）
+
+完整记录见 `CHANGELOG.md`，这里只列三条最影响观感的：
+
+- **好感度注入之前根本没开**（`enable_llm_hooks=False`）。开了之后，"越高越亲昵"才真正成立。
+- **别人的情绪被当成她的心情**。gcp 的"情绪参考"改成"对方情绪"，她可以安慰，但不会跟着抑郁。
+- **随机语言风格覆盖人格**。插件每轮抽一个"文艺范/温和友善"，已关闭，只保留"别用固定套路"一句写在人格里。
+
+配套新增 `references/80-injection-and-tuning.md`（部署侧）和 `references/field-notes.md`（人格侧），
+以及 `scripts/audit_all.py`（35 项体检，配置 + 数据 + 实际注入三层）。
 
 ---
 
